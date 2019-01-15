@@ -1,0 +1,52 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Application: resilience engineering}
+\label{sec:app}
+\begin{definition}[Resilience engineering]
+Here is the definition.
+\end{definition}
+
+From a resilience engineering perspective, we are interested in the probability that the adversary has compromised the sample of $t$ trapdoors as given by
+\begin{equation}
+\label{eq:prob_conf}
+    \Pr[\VarConf_t \geq \alpha]\,,
+\end{equation}
+where $\alpha$ is the minimum acceptable level of confidentiality. If the probability that this minimum level is relatively low (e.g., less than $95\%$), the trapdoor signatures could be reassigned to reestablish confidentiality.
+
+As $t \to \infty$, \cref{eq:prob_conf} goes to $0$. The minimum sample size the adversary may observe without exceeding some specified level of risk is given by the following definition.
+\begin{definition}
+The maximum number of trapdoors the adversary may observe with an acceptable level of risk of successfully compromising the confidentiality of the system is given by
+\begin{equation}
+\label{eq:resample_point}
+    t^* = \argmin_{t} \Pr[\VarConf_t > \alpha] > \beta\,,
+\end{equation}
+where
+\begin{enumerate}
+    \item[$\alpha$] is the minimum level of confidentiality the \emph{Encrypted Search} system seeks to maintain and
+    \item[$\beta$] is an unacceptable level of risk (probability) that the minimum level of confidentiality is not met.
+\end{enumerate}
+\end{definition}
+
+Given a set of Bootstrap resample of $m$ confidentiality statistics
+\[
+    \mathbb{K} = \left\{\Conf_t^{(1)},\ldots,\Conf_t^{(m)}\right\}\,,
+\]
+we may estimate \cref{eq:prob_conf} in two ways. The most straightforward way is the proportion of the sample that is greater than $\alpha$ as given by the statistic
+\begin{equation}
+    \Pr[\VarConf_t \geq \alpha] \approx \frac{\card{\mathbb{A}}}{m}\,,
+\end{equation}
+where
+\begin{equation}
+    \mathbb{A} = \left\{\Conf \in \mathbb{K} \colon \Conf > \alpha\right\}\,.
+\end{equation}
+However, by \cref{thm:normal}, $\VarConf_t$ converges in distribution to a normal distribution. Thus, by the large sample approximation,
+\begin{equation}
+\label{eq:approx_prob_conf}
+    \Pr[\VarConf_t \geq \alpha] \approx 1 - \phi\!\left(\frac{\alpha - \bar{\Conf}_t}{s_{t-1}}\right)\,,
+\end{equation}
+where $\phi$ is the cumulative distribution function of the standard normal, $\bar{\Conf}_t$ is the sample mean, and $s_{t-1}$ is the sample standard deviation. Substituting \cref{eq:approx_prob_conf} into \cref{eq:resample_point} and simplifying results in a statistic of $t^*$ given by
+\begin{equation}
+    \widehat{t^*} = \argmin_{t} \phi\!\left(\frac{\alpha - \bar{\Conf}_t}{s_{t-1}}\right) < 1 - \beta\,.
+\end{equation}
+\end{document}

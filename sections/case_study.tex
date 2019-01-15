@@ -1,0 +1,166 @@
+\documentclass[ ../main.tex]{subfiles}
+\SetKwFunction{Rank}{Rank}
+\newcommand{\harmonic}[2]{H_{#1,#2}}
+\newcommand{\zipf}{\operatorname{\rm{Zipf}}}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Case study: Zipf distribution}
+\label{sec:casestudy}
+Consider a random time series $\rv{X_1},\ldots,\rv{X_n}$. If $\rv{X_i}$ for $i=1,\ldots,n$ follow a Zipf distribution, then its rank is a random variable given by
+\begin{equation}
+\label{eq:rvK}
+    \rv{K} = \Rank\left(\rv{X_i}\right)
+\end{equation}
+such that
+\begin{equation}
+    \rv{K} \sim \zipf(s,N)\,,
+\end{equation}
+where $N$ is the number of unique \emph{plaintext} words and $s$ characterizes the degree of \emph{uniformity} of the Zipf distribution.
+
+\begin{definition}
+The probability mass function of $\rv{K}$ is given by
+\begin{equation}
+    \pmf_{\rv{K}}(k \given s, N) = k^{-s} \harmonic{N}{s}^{-1}\,.
+\end{equation}
+where $\harmonic{N}{s}$ is the \emph{generalized harmonic number} given by
+\begin{equation}
+    \harmonic{n}{s} = \sum_{k=1}^{n} k^{-s}\,.
+\end{equation}
+\end{definition}
+By \cref{eq:rvK}, the probability mass function of $\rv{X_i}$ is given by
+\begin{equation}
+    \pmf_{\rv{X_1}}(x) = \pmf_{\rv{K}}\bigl(\Rank(x) \given s, N\bigr)\,.
+\end{equation}
+for $i=1,\ldots,n$. Similiarly, since a \emph{simple substitution cipher} is being used, the probability mass of $\rv{Y_j}$ is given by
+\begin{equation}
+    \pmf_{\rv{Y_1}}(y) = \pmf_{\rv{X_1}}\!\left(\operatorname{h^{-1}}(y)\right)
+\end{equation}
+for $j=1,\ldots,n$.
+
+The entropy of the Zipf distribution is given by the following theorem.
+\begin{theorem}
+The entropy of the Zipf distribution with parameters $s$ and $N$ is given by
+\begin{equation}
+    \entropy_1(N,s) = \harmonic{N}{s}^{-1} \sum_{k=1}^{N} k^{-s}
+            \left(s \log_2 k + \log_2 \harmonic{N}{s}\right)\,.
+\end{equation}
+\end{theorem}
+\begin{proof}
+\begin{align}
+    \entropy_1(N,s) &= -\sum_{k=1}^{N} \pmf_{\rv{K}}(k \given s, N) \log_2 \pmf_{\rv{K}}(k \given s, N)\\
+      &= -\sum_{k=1}^{N} k^{-s} \harmonic{N}{s}^{-1}
+            \log_2 \left(k^{-s} \harmonic{N}{s}^{-1}\right)\\
+      &= \harmonic{N}{s}^{-1} \sum_{k=1}^{N} k^{-s}
+            \left(s \log_2 k + \log_2 \harmonic{N}{s}\right)\,.
+\end{align}
+\end{proof}
+
+Two limiting cases are given by the following corollaries.
+\begin{corollary}
+The maximum entropy results when the Zipf distribution has a parameter value $s=0$ and is given by
+\begin{align}
+    \entropy_1(s = 0,N) = \log_2 N\,.
+\end{align}
+\end{corollary}
+\begin{proof}
+\begin{align}
+    \entropy_1(0,N)
+        &= \harmonic{N}{0}^{-1} \sum_{k=1}^{N} k^{0}
+        \left(0 \log_2 k + \log_2 \harmonic{N}{0}\right)\\
+        &= N^{-1} \sum_{k=1}^{N} \log_2 N\\
+        &= \log_2 N\,.
+\end{align}
+\end{proof}
+
+\begin{corollary}
+The minimum entropy results when the Zipf distribution has a parameter value $s \to \infty$ and is given by
+\begin{align}
+    \lim_{s \to \infty} \entropy_1(s,N) = 0\,.
+\end{align}
+\end{corollary}
+\begin{proof}
+\begin{align}
+    \lim_{s \to \infty} \entropy_1(s,N)
+        &= \harmonic{N}{\infty} \sum_{k=1}^{N} k^{-\infty}
+        \left(\log_2 k + \log_2 \harmonic{N}{\infty}\right)\\
+        &= 0 \sum_{k=1}^{N} 0
+        \left(\log_2 k + \log_2 0\right)\\
+        &= \sum_{k=1}^{N} 0 \log_2 0\,.
+\end{align}
+The limit
+\begin{equation}
+    \lim_{a \to 0} a \log_2 a = 0\,,
+\end{equation}
+thus
+\begin{equation}
+    \lim_{s \to \infty} \entropy_1(s,N) = 0\,.
+\end{equation}
+\end{proof}
+
+In \cref{}, we map the \emph{accuracy} of the adversary with respect to sample size for various entropy levels. The greater the entropy, the less accurate the mapping is expected to be. At one extreme, we have an entropy of $0$ (minimum entropy) in which $100\%$ of the traffic is successfully mapped after viewing a sample of size $1$ and at the other extreme we have an entropy of $6.64$ (maximum entropy) where the accuracy is given by pure random chance and is not correlated with sample size.
+
+\pgfplotstableread{data/0_6.64386_0.1_100_100000} \datazero     % s = 0
+\pgfplotstableread{data/0.333333_6.55018_0.1_100_100000} \dataa % s = .33
+\pgfplotstableread{data/0.666667_6.14818_0.1_100_100000} \datab % s = .67
+\pgfplotstableread{data/1_5.31024_0.1_100_100000} \datac        % s = 1
+\pgfplotstableread{data/2_2.26533_0.1_100_100000} \datad        % s = 2
+\pgfplotstableread{data/4_0.481547_0.1_100_100000} \datae       % s = 4
+\pgfplotstableread{data/8_0.0392275_0.1_100_100000} \dataf      % s = 8
+\pgfplotstableread{data/16_0.000266781_0.1_100_100000} \datag   % s = 16
+\pgfplotstableread{data/32_7.78651e-09_0.1_100_100000} \datah   % s = 32
+\pgfplotstableread{data/64_3.46945e-18_0.1_100_100000} \datai   % s = 64
+\pgfplotstableread{data/128_3.76158e-37_0.1_100_100000} \dataj  % s = 128
+\pgfplotstableread{data/256_2.21086e-75_0.1_100_100000} \datak  % s = 256
+\pgfplotstableread{data/512_3.81867e-152_0.1_100_100000} \datak % s = 512
+\pgfplotstableread{data/1024_0_0.1_100_100000} \datal           % s = 1024
+
+\begin{figure}
+\caption{Accuracy vs sample size where $N=1000$ for several different entropies}
+\label{fig:acc_vs_samp_size}
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[
+    legend cell align = right,
+    legend pos = outer north east,
+    xmode=log,
+    log ticks with fixed point,    
+    cycle list name = black white,
+    only marks,
+    %smooth,
+    xmin = 1,
+    xmax = 100000,
+    ylabel = {accuracy $r$},
+    xlabel = {sample size $n$}
+]
+    \addplot table[y = p] from \datah;
+    %\addlegendentry{$e(\infty,N) = 0.00$};
+    \addlegendentry{$\entropy_1(\infty,N) = 0.00$};
+    
+    \addplot table[y = p] from \datae;
+    \addlegendentry{$\entropy_1(4,N) = 0.48$};
+    %\addlegendentry{$e(4,N) = 0.07$};
+
+    \addplot table[y = p] from \datad;
+    %\addlegendentry{$e(2,N) = 0.34$};
+    \addlegendentry{$\entropy_1(2,N) = 2.27$};
+    
+    \addplot table[y = p] from \datac;
+    %\addlegendentry{$e(1,N) = 0.80$};
+    \addlegendentry{$\entropy_1(1,N) = 5.31$};
+
+    \addplot table[y = p] from \datab;
+    %\addlegendentry{$e\!\left(\frac{2}{3},N\right) = 0.93$};
+    \addlegendentry{$\entropy_1\!\left(\frac{2}{3},N\right) = 6.15$};
+    
+    \addplot table[y = p] from \dataa;
+    %\addlegendentry{$e\!\left(\frac{1}{3},N\right) = 0.99$};
+    \addlegendentry{$\entropy_1\!\left(\frac{1}{3},N\right) = 6.55$};
+    
+    \addplot table[y = p] from \datazero;
+    %\addlegendentry{$e(0,N) = 1.00$};
+    \addlegendentry{$\entropy_1(0,N) = 6.64$};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+\end{document}

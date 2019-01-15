@@ -1,0 +1,15 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Related work}
+\label{sec:relatedwork}
+Boneh proposed a method to enable untrusted systems the ability to perform searches over encrypted e-mail messages, called public-key encryption with keyword search (PEKS) \cite{ref4}. Boneh designed PEKS in such a way that e-mail messages are encrypted by the public key of an e-mail receiver, while a third party, such as an e-mail server, to perform search for a particular word (e.g., ``urgent'') in each encrypted message without all the raw contents in the encrypted e-mail exposed to the third party. The core of this method is trapdoors, which are a hash value of a given word in e-mails. Each e-mail receiver creates trapdoors, one for each target word and trapdoors are included in each encrypted e-mail message for searches on the encrypted e-mail messages.
+
+Li extended this concept to allow untrusted systems to perform encrypted searches that allow approximate matching by enumerating multiple trapdoors, one for each expected deviation\cite{ref5,ref6,ref7,ref8} proposed to apply encrypted search to enhancing security in cloud computing.
+
+Despite the potentials in the encrypted search schemes, risk of information leaks through guessing the searched words has been identified\cite{ref11,ref12,ref13}. It has been demonstrated\cite{ref11,ref12,ref13} that anyone who has access to encrypted data possibly map them to their plain text counterparts.
+
+Use of secure communication channels (e.g., SSL) will be effective in hiding the trapdoors in queries submitted by legitimate users from external adversaries, but use of secure communication channels still can not prevent frequency attacks from internal adversaries, such as malicious administrators, assuming that they can intercept trapdoors within a local host computer, by installing illegal capturing tool or by tampering executables.
+
+Despite the threat from frequency attacks, there has not been much work that delves into quantified analyses on the conditions for when such information leaks exceed a tolerable risk level under various conditions. Rivain proposed a multivariate Gaussian random variable method to estimate the success rate in discovering secret keys under side-channel attacks\cite{ref14}. Rivain proposed use of ``confidence'' for evaluating the effectiveness in side-channel attacks\cite{ref15}. Rivain and Thillard both proposed a solution against correlation attacks, but not against frequency attacks. Correlation attacks are different from frequency attacks in that the adversary discovers the encryption keys to deduce the plaintext in the former, while the latter induces the plaintext directly from the observed trapdoors without discovering their encryption keys.
+\end{document}

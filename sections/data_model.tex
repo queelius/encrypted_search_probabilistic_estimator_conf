@@ -1,0 +1,133 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{\emph{Encrypted Search} model}
+\label{sec:es_model}
+An information retrieval process begins when a \emph{search agent} submits a \emph{query} to an information system, where a query represents an \emph{information need}. In response, the information system returns a set of relevant objects, such as \emph{documents}, that satisfy the information need.
+
+An \emph{Encrypted Search} system may support many different kinds of queries, but we make the following simplifying assumption.
+\begin{assumption}
+The query model is a \emph{sequence-of-words}.
+\end{assumption}
+
+The \emph{adversary} is given by the following definition.
+\begin{definition}
+The adversary is an untrusted agent that is able to observe the sequence of queries and corresponding search results submitted by authorized search agent. The objective of the \emph{Encrypted Search} system is to prevent the adversary from being able to comprehend 
+\end{definition}
+
+A query submitted to an \emph{Encrypted Search} system should not be comprehensible to the adversary.
+\begin{definition}
+A \emph{hidden query} represents a confidential \emph{information need} of an authorized search agent that is suppose to be incomprehensible to the adversary.
+\end{definition}
+
+The primary means by which \emph{Encrypted Search} is enabled is by the use of cryptographic \emph{trapdoors} as given by the following definition.
+\begin{definition}[Trapdoor]
+Search agents map \emph{plaintext} search keys to some cryptographic hash, denoted trapdoors.
+\end{definition}
+A trapdoor for a \emph{plaintext} search key is necessary to allow an \emph{untrusted} \emph{Encrypted Search} system to look for the key in a corresponding confidential data set.
+
+\begin{assumption}
+The \emph{Encrypted Search} system uses a substitution cipher in which each search key in a \emph{plaintext} query is mapped to a unique trapdoor signature. The substitution cipher is denoted by
+\begin{equation}
+    \operatorname{h} \colon \mathbb{X} \mapsto \mathbb{Y}\,,
+\end{equation}
+where $\mathbb{X}$ is the set of \emph{plaintext} search keys and $\mathbb{Y}$ is the set of \emph{trapdoors}.
+\end{assumption}
+
+The most straightforward substitution cipher is a \emph{simple substitution cipher} where each \emph{atomic} plaintext search key maps to a single trapdoor as illustrated by \cref{alg:q_to_hq}.
+\begin{algorithm}[h]
+    \caption{Simple substitution cipher}
+    \label{alg:q_to_hq}
+    \SetKwProg{func}{function}{}{}
+    \KwIn
+    {
+        $\vec{x}$ is a \emph{plaintext} query.
+    }
+    \KwOut
+    {
+        $\vec{y}$ is the corresponding \emph{hidden query}.
+    }
+    \func{$\HiddenQueryGenerator\!\left(\vec{x}\right)$}
+    {
+        $\vec{y} \gets \left\{\operatorname{h}(x) \colon x \in \vec{x}\right\}$\;
+        \Return $\vec{y}$\;
+    }
+\end{algorithm}
+
+Given a plaintext key $x \in \mathbb{X}$, $\operatorname{h}(x)$ is a random variable whose support is a subset of the trapdoors in $\mathbb{Y}$. Given any plaintext keys $x,x' \in \mathbb{X}$, $x \neq x'$, the supports of $\operatorname{h}(x)$ and $\operatorname{h}(x')$ are disjoint. This makes it possible to \emph{undo} the substitution cipher by some function denoted by
+\begin{equation}
+    \operatorname{g}^* \colon \mathbb{Y} \mapsto \mathbb{X}
+\end{equation}
+such that
+\[
+    x = \operatorname{g}^*\!\left(\operatorname{h}\!\left(x\right)\right)
+\]
+for every $x \in \mathbb{X}$. Thus, given a trapdoor $y \in \mathbb{Y}$, the corresponding plaintext key is given uniquely by $\operatorname{g}^*(y) \in \mathbb{X}$. If $\operatorname{h}$ is a \emph{simple substitution cipher} where each plaintext key maps to a single trapdoor, then $\operatorname{h}$ is a function and $\operatorname{g}^*$ is its inverse denoted by $\operatorname{h}^{-1}$.
+
+\begin{definition}
+A \emph{hidden query} time series of size $p$ is a sequence of $p$ hidden queries given by
+\begin{equation}
+    \left(\vec{y_1}, \ldots, \vec{y_p}\right)\,,
+\end{equation}
+where $\vec{y_j}$ is given by
+\begin{equation}
+    \vec{y_j} = \HiddenQueryGenerator\!\left(\vec{x_j}\right)
+\end{equation}
+for $j=1,\ldots,p$ and $\vec{x_1},\ldots,\vec{x_p}$ is a time series of $n$ \emph{plaintext} queries submitted by authorized search agents.
+\end{definition}
+
+\begin{assumption}
+The adversary may only observe the \emph{hidden query} time series to estimate the \emph{plaintext query} time series.
+\end{assumption}
+
+We denote the $p$ components of the \jth trapdoor $\vec{y_j}$ by
+\[
+    y_{j 1},\ldots,y_{j j_p}\,,
+\]
+and thus given a \emph{hidden query} time series
+\begin{equation}
+    \left(\vec{y_1}, \vec{y_2}, \ldots, \vec{y_p}\right)\,,
+\end{equation}
+we may represent it by the time series given by
+\begin{align}
+\begin{split}
+    \left(y_{1\,1}, \ldots, y_{1\,j_1}, q, y_{2\,1}, \ldots, y_{2\,j_2}, q, \ldots, y_{p\,1},\ldots, y_{p\,j_p}, q\right)\,,
+\end{split}
+\end{align}
+where $q$ denotes the \emph{end-of-vector} token.
+
+We denote a time series of such trapdoors by the following definition.
+\begin{definition}
+A time series of $n$ trapdoors is denoted by
+\begin{equation}
+    \vec{\tau_n} = \left(y_1, \ldots, y_n\right)\,,
+\end{equation}
+where
+\begin{equation}
+    y_j = \operatorname{h}(x_j)
+\end{equation}
+for $j=1,\ldots,n$ and $(x_1,\ldots,x_n)$ is the corresponding \emph{plaintext} time series.
+\end{definition}
+
+\subsection{Probabilistic model}
+\label{sec:pr_model}
+The two primary sources of information are given by the (unobserved) time series of plaintext which induces the (observable) time series of trapdoors. Other potential sources of information are ignored, such as the time a \emph{hidden query} is submitted.\footnote{The time series $\tau_n$ is just a logical time with the only constraint being that $y_j$ was submitted before or at the same time as $y_{j+1},\ldots,y_n$.} 
+
+Since the time series of \emph{plaintext} is uncertain, we model it as a sequence of random variables.
+\begin{definition}
+The \jth random \emph{plaintext} search key, denoted by $\rv{X_j}$, in a time series of size $n$ has a conditional probability given by
+\begin{equation}
+    \Pr\!\left[\rv{X_j} = x_j \given \rv{X_1} = x_1,\ldots,\rv{X_{j-1}} = x_{j-1}\right]
+\end{equation}
+for $j=1,\ldots,n$ and one of the \emph{keys} is special and denotes \emph{end-of-query}.
+\end{definition}
+
+The time series of trapdoors is a function of the \emph{plaintext} time series.
+\begin{definition}
+The uncertain \jth trapdoor is a random variable given by
+\begin{equation}
+    \rv{Y_j} = \operatorname{h}\!\left(\rv{X_j}\right)\,,
+\end{equation}
+where the \emph{end-of-query} key is not remapped by the substitution cipher $\operatorname{h}$.
+\end{definition}
+\end{document}

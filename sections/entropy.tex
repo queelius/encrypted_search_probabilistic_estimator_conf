@@ -1,0 +1,137 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Mapping \emph{entropy} to \emph{confidentiality}}
+\label{sec:sophisticated}
+The adversary described in \cref{sec:threatmodel} may efficiently compromise the confidentiality of a time series of trapdoors if a \emph{simple substitution cipher} is employed as described in \cref{sec:es_model}. However, the described adversary is not particularly sophisticated. For instance, a more sophisticated adversary incorporates the search patterns of specific search agents into the probability model described in \cref{sec:pr_model}.
+
+The adversaries we worry about the most are probably more clever than us. Thus, it may be asking too much to simulate them so that a \emph{reliable} confidentiality statistic can be produced. Matters are further complicated if a simple substitution cipher is not used, e.g., a homophonic encryption scheme is used to flatten the distribution of trapdoors. In this case, the confidentiality is expected to improve, but it may be difficult to quantify to what extent.
+
+We may be able to construct a \emph{lower-bound} on confidentiality that is a function of the \emph{entropy}. The entropy of a random time series of $t$ trapdoors is given by
+\begin{equation}
+    \entropy\!\left(\rv{Y_1},\ldots,\rv{Y_t}\right)\, \si{bits}\,.
+\end{equation}
+If the random time series is independently distributed, the entropy simplifies to $\entropy\!\left(\rv{Y_1}\right) + \cdots + \entropy\!\left(\rv{Y_t}\right)$ and if it is also identically distributed is simplifies to $t \entropy\!\left(\rv{Y_1}\right)$. Consider the following cases:
+\begin{enumerate}
+    \item
+    \label{itm:maxentropy}
+    An \emph{optimal} adversary is expected learn \emph{nothing} about the mapping from \emph{trapdoors} to \emph{plaintext keys} by observing a uniformly distributed time series.\footnote{The optimal adversary \emph{randomly} chooses a mapping.} A uniformly distributed time series of over a support set of $m$ unique trapdoor signatures has $\log_2 m \; \si{bits \per trapdoor}$ of entropy.
+    
+    \item
+    \label{itm:minentropy}
+    An \emph{optimal} adversary is expected to learn \emph{everything} about the mapping from \emph{trapdoors} to \emph{plaintext keys} by observing a degenerate time series, which has zero entropy.
+\end{enumerate}
+By \cref{itm:maxentropy,itm:minentropy}, the entropy is bounded by
+\begin{equation}
+    0 \leq \entropy\!\left(\rv{Y_1},\ldots,\rv{Y_t}\right) \leq t \log_2 m\,.
+\end{equation}
+
+We use these insights to construct an \emph{information again} measure given by the following definition.
+\begin{definition}
+The \emph{mean information gain} of a random time series $\rv{Y_1},\ldots,\rv{Y_t}$ is defined to be the difference between the \emph{maximum entropy} and the actual entropy as given by
+\begin{align}
+    \mu(t) = t \log_2 m - \entropy\left(\rv{Y_1},\ldots,\rv{Y_t}\right)\,,
+\end{align}
+which is a real number between $0$ and $t \log_2 m$.
+\end{definition}
+If the random time series is independently and identically distributed, then the \emph{mean information gain} is given by
+\begin{align}
+    \mu(t) = t \left(\log_2 m - \entropy\left(\rv{Y_1}\right)\right) \; \si{bits}\,.
+\end{align}
+
+The rate of change of the \emph{mean information gain} is given by the following theorem.
+\begin{theorem}
+The rate of change of the \emph{mean information gain} at time $t$ is given by
+\begin{align}
+    \lambda(t) = \log_2 m - \entropy\left(\rv{Y_t} \given \rv{Y_{t-1}},\ldots,\rv{Y_1}\right) \; \si{bits \per trapdoor}\,,
+\end{align}
+which is a real number between $0$ and $\log_2 m$.
+\end{theorem}
+\begin{proof}
+The rate of change at time $t$ is the difference between the \emph{mean information gain} at time steps $t$ and $t-1$, which is given by
+\begin{align}
+    \lambda(t) &= \mu(t) - \mu(t-1)\\
+               &= \log_2 m - \entropy\left(\rv{Y_t}, \ldots,\rv{Y_1}\right) + \entropy\left(\rv{Y_{t-1}},\ldots,\rv{Y_1}\right)\,.
+\end{align}
+The joint entropy $\entropy(\rv{Y_1},\ldots,\rv{Y_t})$ may be rewriten as \begin{equation}
+    \entropy(\rv{Y_t} \given \rv{Y_{t-1}}, \cdots, \rv{Y_1}) + \entropy(\rv{Y_{t-1}}, \cdots, \rv{Y_1})\,.
+\end{equation}
+Performing this substitution results in the equivalent equality given by
+\begin{align}
+\begin{split}
+    \lambda(t)
+        &= \log_2 m - \entropy\left(\rv{Y_t} \given \rv{Y_{t-1}}, \ldots,\rv{Y_1}\right)\\
+        &\qquad+ \entropy\left(\rv{Y_{t-1}}, \ldots,\rv{Y_1}\right) -\entropy\left(\rv{Y_{t-1}},\ldots,\rv{Y_1}\right)
+\end{split}\\
+        &= \log_2 m - \entropy\left(\rv{Y_t} \given \rv{Y_{t-1}}, \ldots,\rv{Y_1}\right)\,.
+\end{align}
+\end{proof}
+If the random time series is independently and identically distributed, then the rate of change is a constant given by
+\begin{equation}
+    \lambda = \log_2 m - \entropy\left(\rv{Y_1}\right) \; \si{bits \per trapdoor}\,.
+\end{equation}
+
+We may rewrite $\mu(t)$ in terms of the \emph{rate} of the mean information gain as given by
+\begin{equation}
+    \mu(t) = \sum_{j=1}^{t} \lambda(j)\,.
+\end{equation}
+For the \emph{uniformly distributed} time series and the degenerate time series, $\lambda(t) = 0$ and $\lambda(t) = \log_2 m$ respectively for all time steps $t$.
+
+We make the following conjecture about the \emph{mean information gain}.
+\begin{conjecture}
+The \emph{mean information gain} $\mu(t)$ quantifies the amount of information the \emph{optimal} adversary is able to extract from observing $\rv{Y_1}, \ldots, \rv{Y_t}$ for the purpose of mapping \emph{trapdoors} to \emph{plaintext keys}.
+
+An upper-bound on the \emph{expected} accuracy of the \emph{optimal adversary} at time $t$ is an \emph{unknown} function
+\begin{equation}
+    \operatorname{r} \colon \{1,2,\ldots\} \mapsto (0,1]
+\end{equation}
+that is a function of $\mu(t)$ and has the following constraints:
+\begin{enumerate}
+    \item $0 < \operatorname{r}(t) \leq 1$ for $t \geq 1$. The accuracy is between $0$ and $1$. However, $\operatorname{r}(t)$ is an \emph{expectation}, and the optimal adversary has a chance at correctly mapping trapdoors to plaintext even if the random time series has the maximum entropy, thus it is always greater than $0$.
+    \item $\operatorname{r}(t+1) \geq \operatorname{r}(t)$. It is a monotonically increasing function since seeing more of the time series is not \emph{expected} to decrease the optimal adversary's accuracy.\footnote{Unless more severe countermeasures to throw off the adversary are employed at time $t+1$ than during previous time steps. However, we assume that time $t+1$ is not a special point in time, and that later time steps do not employ more aggressive counter-measures than earlier time steps.}
+    \item If $\lambda(t) = 0$, then $\operatorname{r}(t+1) - \operatorname{r}(t) = 0$. If no information is gained from observing a time step $t$, then the optimal adversary is not expected to improve accuracy at time $t$.
+    \item $\lim_{t \to \infty} \operatorname{r}(t) = c, 0 < c \leq 1$. This is entailed by the other constraints. If the adversary knows the \emph{true} distribution, where the distribution is not uniformly distributed, and the maximum likelihood equation has a unique solution, then $c = 1$.
+\end{enumerate}
+\end{conjecture}
+Plausible candidates of $\operatorname{r}$ take on \emph{sigmoid}-like curves. Initially, $\operatorname{r}$ is near its lower-limit (typically near $0$) and as $t$ increases, $\operatorname{r}$ begins to slowly increase. Given an appropriate mapping from trapdoors to plaintext, the empirical distribution of the mapped trapdoors starts to resemble the unknown true distribution. At some point, the empirical distribution has nearly zero divergence from the true distribution, and thus 
+
+\subsection{Estimating entropy}
+Since the probabilistic model for the random time series may not be known, we may estimate the entropy.
+\begin{postulate}[Optimal compressor]
+\label{post:optcomp}
+The \emph{entropy} of a random time series is equivalent to the \emph{expected} bit length output by an optimal \emph{lossless} compressor given the time series as input as given by
+\begin{equation}
+    \entropy\left(\rv{Y_1},\ldots,\rv{Y_t}\right) =
+    \expectation\Biggl[
+        \BL\biggl(
+            \Compress^*\bigl(
+                \rv{Y_1} \rv{Y_2} \cdots \rv{Y_t}
+                )
+            \bigr)
+        \biggr)
+    \Biggr]\,,
+\end{equation}
+where $\Compress^*$ is a lossless optimal compressor of the sequence and $\BL(x)$ is the bit length of $x$.
+\end{postulate}
+
+Thus, we may estimate the entropy as given by the following definition.
+\begin{definition}
+Given a time series of $t$ trapdoors,
+\begin{equation}
+    \tau_t = \left(y_1,\ldots,y_t\right)\,,
+\end{equation}
+an estimator of the entropy is given by
+\begin{equation}
+    \hat{\entropy} = \BL\left(\Compress(y_1 y_2 \cdots y_t)\right)\,,
+\end{equation}
+where \Compress is a near-optimal compressor of the time series.
+\end{definition}
+
+The \emph{entropy} is an \emph{expectation}, and is therefore a constant. However, an optimal compressor as a function of $\rv{Y_1},\ldots,\rv{Y_2}$ outputs a bit string with a \emph{random} bit length whose \emph{expectation} is given by the entropy. Thus, it has a \emph{sampling distribution}.
+
+For the purpose of matching the \emph{trapdoors} to \emph{plaintext}, assuming we have the \emph{true} distribution, the most accurate mapping occurs when the empirical distribution of $\tau_t$ has zero divergence from the \emph{true} distribution. The empirical distribution converges in distribution to the \emph{true} distribution, so as $t \to \infty$, $p_t \to 1$.
+
+The adversary given by \cref{} is \emph{optimal} if the time series $\tau_t$ is drawn from a \emph{unigram} language model using a \emph{simple substitution cipher}.
+
+One possibility is to do a \emph{curve fit} of $\operatorname{r}$ to the mean confidentiality with respect to time step $t$. Alternatively, ... the expected gain from this distribution to the computed confidentiality, and then assume that this mapping \emph{generally} holds. NOTE CORRECT. REMEMBER, r(t) maps t to accuracy THROUGH u(t). We can calculate u(t), see what the conf. is at u(t), and then map that confidentiality to r(t).
+\end{document}

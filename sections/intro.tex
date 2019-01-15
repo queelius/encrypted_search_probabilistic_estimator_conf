@@ -1,0 +1,19 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Introduction}
+\label{sec:introduction}
+With the advent of \emph{cloud computing}, it is tempting to store our confidential data on remote (untrusted) systems like a cloud storage provider. However, a system administrator may be able to compromise the confidentiality of our data which threatens to prevent further adoption of cloud computing and electronic information retrieval in general if the threat cannot be mitigated\cite{ref1,ref2,ref3}.
+
+The primary challenge is a trade-off problem between confidentiality and usability of the data stored on remote untrusted systems. \emph{Encrypted Search} attempts to resolve this trade-off problem.
+\begin{definition}
+\emph{Encrypted Search} allows authorized search agents to investigate presence of specific search terms in a confidential target data set, such as a database of encrypted documents\cite{ref4,ref5,ref6,ref7,ref8}, while the contents, especially the meaning of the target data set and search terms, are hidden from any unauthorized personnel, including the system administrators of a cloud server.
+\end{definition}
+Essentially, \emph{Encrypted Search} enables \emph{oblivous search}. For instance, a user may search a confidential database stored on an untrusted remote system without other parties being able to determine what the user searched for. We denote any untrusted party that has full access to the untrusted remote system (where the confidential data is stored) as an adversary.\footnote{A system administrator being a typical example.}
+
+Despite the potential of \emph{Encrypted Search}, \emph{perfect} confidentiality is not theoretically possible. There are many ways confidentiality may be compromised. In this paper, we consider an adversary whose primary objective is to comprehend the confidential information needs of the search agents by analyzing their history of \emph{Encrypted Search} queries.
+
+A simple measure of confidentiality is given by the proportion of queries the adversary is able to comprehend. We consider an adversary that employs a known-plaintext attack. However, since the confidentiality is a function of the history of queries, different histories will result in different levels of confidentiality. We apply the Bootstrap method to estimate the sampling distribution of the confidentiality. The sampling distribution provides the probabilistic framework to resolve security-related questions such as ``what is the probability that the confidentiality is less than $70\%$?'' 
+
+The rest of this paper is organized as follows. \cref{sec:relatedwork} reviews existing work in \emph{Encrypted Search}. There has not been much work that quantitatively analyzes the conditions for information leaks by frequency attacks, such as the number of encrypted words an adversary needs to observe for a certain accuracy and how likely it happens. \Cref{sec:mab} introduces the \emph{moving average bootstrap} (MAB) method, an efficient estimator of the achievable accuracy by the adversary using frequency attacks. \Cref{sec4} presents our performance evaluations on the MAB method. \Cref{sec5} summarizes our contributions and planned future work, followed by the selected references.
+\end{document}

@@ -1,0 +1,8 @@
+
+\Cref{fig:n_vs_p} shows a plot of sample size $n$ versus accuracy $p_n$ for a simulated sequence of trapdoors. After a small number of observations of trapdoors, the adversary is able to temporarily obtain an accuracy level of $0.36$. However, this did not last and only much later did the adversary consistently score an accuracy level greater than $0.36$.
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{images/fig2.png}
+\caption{An example of plots of adversary accuracy for a session of frequency attack and fluctuations in the adversary accuracy}
+\label{fig:n_vs_p}
+\end{figure}

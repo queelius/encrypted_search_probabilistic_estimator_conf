@@ -1,0 +1,74 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Threat model: \emph{known-plaintext attack}}
+\label{sec:threatmodel}
+In this threat model, the adversary is interested in estimating the \emph{plaintext} time series. However, the adversary is only able to observe the \emph{trapdoor} time series. Thus, the adversary's objective is to infer the \emph{plaintext} from the \emph{trapdoors} using frequency analysis attacks,\footnote{Also known as spectral analysis attacks\cite{ref9}.} in particular a \emph{known-plaintext attack}.
+
+In a known-plaintext attack, the adversary the objective of the adversary is to learn how to \emph{undo} the substitution cipher $\operatorname{h}$ as given by $\operatorname{g}^*$.
+\begin{assumption}
+The mapping function $\operatorname{g}^*$ is not known to the adversary.
+\end{assumption}
+\begin{assumption}
+The adversary is able to observe a time series of $n$ trapdoors, i.e., a particular $\tau_n$.
+\end{assumption}
+A maximum likelihood estimator of $\operatorname{g}^*$ is given by
+\begin{align}
+\label{eq:mle}
+\begin{split}
+    \operatorname{\hat{g}} &= \argmax_{\operatorname{g} \in G}
+    \biggl\{
+        \Pr\!\left[
+            \rv{X_1} = \operatorname{g}(y_1)\right] \times\\
+        & \qquad \prod_{i=2}^{n} \Pr\!\left[
+            \rv{X_i} = \operatorname{g}(y_i) \given
+            \rv{X_{i-1}} = \operatorname{g}(y_{i-1}),
+            \ldots,
+            \rv{X_1} = \operatorname{g}(y_1)
+        \right]
+    \biggr\}\,,
+\end{split}
+\end{align}
+where $G$ is the set of all possible mapping functions from the set of trapdoors $\mathbb{Y}$ to the set of plaintext keys $\mathbb{X}$.
+
+If two plaintext keys $x,x' \in \mathbb{X}, x \neq x'$, may be exchanged without changing the probability distribution of the time series, they are \emph{indistinguishable} and the mapping function $\operatorname{g}^*$ necessarily has multiple maximum likelihood estimates (even after observing an infinite time series).\footnote{The maximum likelihood estimator of the mapping function is not \emph{consistent}.} However, if some of the random variables are not exchangeable, then the \emph{adversary} may learn \emph{something} about the plaintext by observing the time series of trapdoors.
+
+The greater the uniformity of the \emph{true} distribution, the less accurate the maximum likelihood estimator of $\operatorname{g}^*$ is. At the limit of maximum uniformity, where every pair is exchangeable, the adversary can learn nothing about the plaintext by observing the time series. Natural languages have a high degree of non-uniformity and so the primary concern of the adversary is the divergence between the \emph{true} distribution and the \emph{known-plaintext} distribution.
+\begin{assumption}
+The optimal adversary knows the \emph{true} plaintext distribution $\rv{X_1},\ldots,\rv{X_n}$ (or a \emph{known-plaintext} distribution that has a sufficiently small divergence from the \emph{true} distribution).
+\end{assumption}
+The \emph{known-plaintext} distribution may be used to solve an approximation to \cref{eq:mle} as given by the following definition.
+\begin{definition}
+In a \emph{known-plaintext attack}, the adversary substitutes the unknown true distribution with the known-plaintext distribution and solves \cref{eq:mle} under this substituted distribution.
+\end{definition}
+
+\paragraph{Sub-optimal adversaries} A \emph{suboptimal} adversary may have any of the following problems:
+\begin{enumerate}
+    \item The distribution of the known-plaintext diverges from the true distribution to the extent that the maximum likelihood estimator is inconsistent. All things else being equal, the less divergence between the \emph{true} distribution and the \emph{known-plaintext} distribution, the better the estimator. 
+    \item The space of mapping functions $G$ may be too large or complex. Note that for a simple substitution cipher, the space of mapping functions $G$ has $k!$ possible mapping functions, where $k$ is the cardinality of the set of plaintext keys $\mathbb{X}$, but a solution to the maximum likelihood estimator may be found in logarithmic time.\footnote{In this case, the desired mapping function $\operatorname{\hat{g}}$ maps the \jth most frequently occurring \emph{trapdoor} in the \emph{trapdoor} time series to the \jth most probable \emph{plaintext} key under the \emph{true} distribution.}
+    \item A simplified probabilistic language model is employed to simplify the problem of finding the maximum likelihood estimate, and thus some of the information in the time series is discarded.
+\end{enumerate}
+
+According to Piantadosi, the marginal distribution of words in most documents (and queries) follow a Zipf distribution\cite{ref10}, where the most frequent word occurs approximately proportional to $k$ times as often as the \kth most frequently occurring word.
+
+If an adversary ignores correlations in the time series by modeling each time step as an independent and identically distributed random variable, then \cref{eq:mle} simplifies to the trivially solvable 
+\begin{align}
+\label{eq:approx_mle}
+    \operatorname{\hat{g}}
+        &= \argmax_{\operatorname{g} \in G}
+        \left\{
+            \prod_{i=1}^{n} \Pr\!\left[
+                \rv{X} = \operatorname{g}(y_i)\right]
+        \right\}\\
+        &= \argmax_{\operatorname{g} \in G}
+        \left\{
+            \sum_{i=1}^{n} \log \Pr\!\left[
+                \rv{X} = \operatorname{g}(y_i)\right]
+        \right\}
+\end{align}
+where
+\[
+    \Pr[\rv{X} = x] = \frac{1}{n} \sum_{i=1}^{n} \Pr[\rv{X_i} = x]\,.
+\]\,.
+If the true distribution is an independent and identically distributed time series, the adversary is optimal if a solution to \cref{eq:approx_mle} can be found.
+\end{document}

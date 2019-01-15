@@ -1,0 +1,73 @@
+\SetKwFunction{Encode}{encode}
+\SetKwFunction{BL}{BL}
+\SetKwFunction{HiddenQueryGenerator}{hidden\_query\_maker}
+\SetKwFunction{Compress}{compress}
+\SetKwFunction{Gain}{gain}
+
+\DeclareMathOperator{\expectation}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\card}[1]{\left\vert{#1}\right\vert}
+\newcommand{\entropy}{\operatorname{\mathcal{H}}}
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\indicator}[1]{\operatorname{\mathbbm{1}_{#1}}}
+\newcommand{\given}{{\,|\,}}
+\newcommand{\rv}[1]{\mathrm{#1}}
+\newcommand{\pmf}{\operatorname{p}}
+\newcommand{\kth}{$k^{\text{th }}$}
+\newcommand{\ith}{$i^{\text{th }}$}
+\newcommand{\jth}{$j^{\text{th }}$}
+\newcommand{\nth}{$n^{\text{th }}$}
+\newcommand{\tth}{$t^{\text{th }}$}
+\newcommand{\rth}{$r^{\text{th }}$}
+\newcommand{\pth}{$p^{\text{th }}$}
+\newcommand\concatop{\mathbin{+\mkern-10mu+}}
+
+\newcommand{\Conf}{k}
+\newcommand{\VarConf}{\rv{K}}
+\newcommand{\var}{\operatorname{\rm{Var}}}
+\newcommand{\dconverges}[1]{\xrightarrow{\makebox[2em][c]{$\scriptstyle#1$}}}
+
+\bibliographystyle{plainnat}
+
+\graphicspath{images}
+
+\usetikzlibrary{arrows,shapes,positioning}
+\usetikzlibrary{calc,decorations.markings}
+
+\RestyleAlgo{ruled}
+\LinesNumbered
+
+\numberwithin{equation}{section}
+\newcounter{equationstore}
+\AtBeginEnvironment{proof}{\setcounter{equationstore}{\value{equation}}
+\setcounter{equation}{0}\renewcommand{\theequation}{\alph{equation}}}
+\AtEndEnvironment{proof}{\setcounter{equation}{\value{equationstore}}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{definition}{Definition}
+\newtheorem{postulate}{Postulate}
+\newtheorem{assumption}{Assumption}
+\newtheorem{conjecture}{Conjecture}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{notation}{Notation}
+
+\newcounter{examplecounter}
+\newenvironment{example}
+{
+    \begin{quote}%
+    \refstepcounter{examplecounter}%
+    \textbf{Example \arabic{examplecounter}}%
+    \quad
+}
+{%
+    \end{quote}%
+}
+
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}

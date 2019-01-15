@@ -1,0 +1,92 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Confidentiality statistic}
+\label{sec:bootstrap}
+We are interested in measuring the degree of confidentiality as given by the following definition.
+\begin{definition}[Confidentiality statistic]
+Given a time series of $n$ trapdoors
+\begin{equation}
+    \vec{\tau_n} = \left(y_1,y_2\ldots,y_t, \ldots, y_n\right)\,,
+\end{equation}
+the confidentiality at time step $t$, $1 \leq t \leq n$, is given by
+\begin{equation}
+\label{eq:conf_metric}
+    \Conf_t = 1 - p_t
+\end{equation}
+where $p_t$ is the fraction of trapdoors in the first $t$ time steps that the adversary successfully maps to \emph{plaintext}. That is,
+\begin{equation}
+\label{eq:accuracy}
+    p_t = \frac{\delta}{t}\,,
+\end{equation}
+where
+\begin{equation}
+    \delta = \sum_{i=1}^{t} \left[\operatorname{g}^*(y_i) = \operatorname{\hat{g}}(y_i)\right]\,.
+\end{equation}
+\end{definition}
+The following example illustrates the \emph{confidentiality statistic}.
+\begin{example}
+Suppose the adversary is able to correctly map the set of trapdoors given by
+\begin{equation}
+    \left\{ a, b, c \right\}
+\end{equation}
+to \emph{plaintext} in a time series of $8$ trapdoors given by
+\begin{equation}
+    \vec{\tau_8} = \left(a, c, d, b, e, d, b, d\right)\,.
+\end{equation}
+
+The adversary correctly maps $\delta = 3$ of the first $t = 4$ trapdoors in the time series. Thus, the confidentiality at time step $4$ is given by
+\begin{equation}
+    \Conf_4 = 1 - \frac{3}{4} = 0.25\,.
+\end{equation}
+
+The adversary correctly maps $\delta = 4$ trapdoors in the total time series. Thus, the confidentiality at time step $8$ is given by
+\begin{equation}
+    \Conf_8 = 1 - \frac{4}{8} = 0.5\,.
+\end{equation}
+According to this statistical measure, the confidentiality increased from time step $4$ and $8$, i.e., the adversary \emph{comprehends} a smaller fraction of the time series at the later time step.
+\end{example}
+
+The confidentiality statistic is expected to converge to some asymptotic limit, i.e., as $t \to \infty$, the confidentiality $\Conf_t \to c$, $0 \leq c \leq 1$. If the adversary employs a \emph{known-plaintext attack} where the distribution of the \emph{known-plaintext} is equivalent to the \emph{true} distribution, then $c = 0$, i.e., the adversary eventually comprehends the entire time series.
+
+\subsection{Sampling distribution of \emph{confidentiality statistic}}
+The \emph{confidentiality statistic} is a function of a \emph{random time series} $\left(\rv{Y_1},\ldots,\rv{Y_n}\right)$. Thus, it has a \emph{sampling distribution}.
+\begin{definition}
+The sampling distribution of $\Conf_t$ is denoted by $\VarConf_t$ for $t = 1,\ldots,n$ for a random time series of $n$ trapdoors.
+\end{definition}
+The sampling distribution quantifies everything there is to know about the statistic. For instance, the \emph{sampling distribution} may be used to make claims like ``there is a $1\%$ chance the adversary comprehends $70\%$ of the time series at time step $t$.''  
+
+Generally, the sampling distribution is not known and thus must be estimated. If we estimate the generative model of the time series of trapdoors, we may use the Bootstrap method\cite{ref16} to estimate the sampling distributions.
+
+TALK ABOUT THE WAYS TO GENERATE A TIME SERIES OF TRAPDOORS HERE. ONE WAY IS TO SIMPLY DO A MARGINAL. BUT, A BIGRAM ALSO WORKS. TIMING WISE, A BIGRAM THAT IS TIME DEPENDENT... E.G., THE LAST q TRAPDOORS. MANY OTHER MODELS. LOOK IT UP! YOU ACTUALLY ALSO HAVE CODE FOR THIS ALREADY. STUFF DESIGNED TO MAKE IT WORK FOR SMALLER SAMPLES, E.G., INTERPOLATION.
+
+In the Bootstrap method, we ``resample'' from the time series and compute the confidentiality $\Conf_t$ of the resample. If we do this $m$ times, we generate a sample of $m$ confidentiality statistics
+\begin{equation}
+    \Conf_t^{(1)},\ldots,\Conf_t^{(m)}
+\end{equation}
+for $t=1,\ldots,n$.
+
+Given this sample, we may compute any statistic that is a function of the sample. For instance, the \emph{expected} value of the confidentiality statistic at time step $t$, $\expectation[\VarConf_t]$, may be estimated by the sample mean
+\begin{equation}
+    \bar{\Conf}_t = \frac{1}{t} \sum_{i=1}^{m} \Conf_t^{(i)}\,.
+\end{equation}
+Another estimator of the \emph{expected} confidentiality is given by a \emph{moving average} like \emph{Exponential smoothing}. However, the Bootstrap sampling distribution makes it possible to compute many other statistics of interest.
+
+The variance of the confidentiality statistic at time step $t$, $\var[\VarConf_t]$, is another parameter of potential interest\footnote{The fluctuations demonstrated by \cref{} indicate high variance.} and may be estimated by the sample variance
+\begin{equation}
+    s_{m-1}^2 = \frac{1}{m-1} \sum_{i=1}^{m} \left(\Conf_t^{(i)} - \bar{\Conf}_t\right)^2\,.
+\end{equation}
+If the variance is high at a time step $t$, the \emph{expected} confidentiality at time step $t$ is not very indicative of the confidentiality of any particular time series at time step $t$.
+
+By the large sample approximation, the sampling distribution of $\Conf_t$ for $t=1,\ldots,n$ is approximately normal as given by the following theorem.
+\begin{theorem}
+\label{thm:normal}
+The sampling distribution of $\Conf_t$ converges in distribution to the normal distribution with a mean $\bar{\Conf}_t$ and a variance $s_{m-1}^2$, denoted by
+\begin{equation}
+    \VarConf_t \dconverges{d} \mathcal{N}\!\left(\bar{\Conf}_t, s_{m-1}^2\right)\,.
+\end{equation}
+\end{theorem}
+\begin{proof}
+The confidentiality statistic given by \cref{eq:conf_metric} is a linear function of an average. Therefore, by the Central Limit Theorem, the sampling distribution of $\Conf_t$ converges in distribution to a normal distribution with a mean given by the sample mean and a variance given by the sample variance.
+\end{proof}
+\end{document}

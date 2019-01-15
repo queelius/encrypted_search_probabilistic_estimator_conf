@@ -1,0 +1,46 @@
+\documentclass[ ../main.tex]{subfiles}
+\providecommand{\mainx}{..}
+\begin{document}
+\section{Conclusions and future work}
+\label{sec:conclusions}
+The primary contributions in this paper are two-folds. First, there has
+not been much work for studying how safe encrypted searches are against
+frequency attacks, which can be measured by a large number of attackers
+for long period of time, possibly infinitely long. We provide studies on
+the resilience of encrypted searches against frequency attacks from the
+view point of resilience engineering approach to enhance security on
+encrypted searches. Resilience engineering is a new way of enhancing
+safety by precisely estimating the level of possible threats to a system
+and feeding them back to adjusting or re-designing the system to
+maintain the acceptable level of safety\cite{ref17}.
+
+Our second contribution is development of a new method, Moving Average
+Bootstrap (MAB) method, which efficiently and accurately calculates the
+estimator for the minimum number of encrypted words ($N^*$) an
+adversary needs to achieve a given accuracy level ($p^*$) with a
+certain level of confidence as soon as a relatively small number of
+samples ($n$) (i.e., encrypted words) are submitted by legitimate
+users. Thus, the MAB method will let the defenders calculate the
+estimator at an early stage without waiting for a large number of
+queries submitted by legitimate users. Especially from the view point of
+``tractability'', calculating the estimator using, not to mention an
+infinitely large number of encrypted words, a large number of encrypted
+words takes time (waiting for a large number of encrypted words to be
+submitted) and huge storage (storage space to hold the submitted
+encrypted words) is required.
+
+Our proposed MAB method calculated the estimated number of encrypted
+search queries an adversary needs to observe ($N^*$) for achieving a
+given accuracy level, $p^* = 0.30$, at the confidence level of $95\%$
+using only $5\%$ of the actual observations (250/5000) (Figure 5 (c)).
+Assuming that the increase in the time an adversary needs to achieve a
+certain $p^*$ is proportional to the ratio in the increase of the
+number of the encrypted words observed by an adversary ($n$) for a
+large number of encrypted words, the MAB method would allow a defender
+to estimate $N^*$ in $5\%$ of time (without waiting for legitimate
+users to issue a large number of encrypted words). We are currently
+performing analyses using higher $p^*$ ($0.55$ through $0.80$) for
+different levels of confidence ($90$ to $98\%$) for observing how they
+affect the performance of MAB method and for observing if there is any
+pathological case for MAB method.
+\end{document}
