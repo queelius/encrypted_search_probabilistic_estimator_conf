@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Encrypted Search: A probabilistic estimator of confidentiality.</title>
+  <meta name="description" content="Encrypted Search: A probabilistic estimator of confidentiality." />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Encrypted Search: A probabilistic estimator of confidentiality." />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Encrypted Search: A probabilistic estimator of confidentiality." />
+  
+  
+  
+
+
+
+<meta name="date" content="2019-03-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<style type="text/css">
+p.abstract{
+  text-align: center;
+  font-weight: bold;
+}
+div.abstract{
+  margin: auto;
+  width: 90%;
+}
+</style>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path=""><a href="#keywords"><i class="fa fa-check"></i>Keywords</a></li>
+<li class="chapter" data-level="1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path=""><a href="#relatedwork"><i class="fa fa-check"></i><b>2</b> Related Work</a></li>
+<li class="chapter" data-level="3" data-path=""><a href="#es_model"><i class="fa fa-check"></i><b>3</b> Encrypted Search Model</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path=""><a href="#pr_model"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path=""><a href="#threatmodel"><i class="fa fa-check"></i><b>4</b> Threat Model: Known-Plaintext Attack</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#sub-optimal-adversaries"><i class="fa fa-check"></i>Sub-Optimal Adversaries</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path=""><a href="#bootstrap"><i class="fa fa-check"></i><b>5</b> Confidentiality Statistic</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path=""><a href="#sampling-distribution-of-confidentiality-statistic"><i class="fa fa-check"></i><b>5.1</b> Sampling Distribution of Confidentiality Statistic</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path=""><a href="#sophisticated"><i class="fa fa-check"></i><b>6</b> Mapping <em>Entropy</em> to <em>Confidentiality</em></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path=""><a href="#estimating-entropy"><i class="fa fa-check"></i><b>6.1</b> Estimating Entropy</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path=""><a href="#app"><i class="fa fa-check"></i><b>7</b> Application: Resilience Engineering</a></li>
+<li class="chapter" data-level="8" data-path=""><a href="#casestudy"><i class="fa fa-check"></i><b>8</b> Case Study: Zipf Distribution</a></li>
+<li class="chapter" data-level="9" data-path=""><a href="#conclusion"><i class="fa fa-check"></i><b>9</b> Conclusions and Future Work</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Encrypted Search: A probabilistic estimator of confidentiality.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Encrypted Search: A probabilistic estimator of confidentiality.</h1>
+<p class="author"><em><p></p></em></p>
+<p class="date"><em>2019-03-18</em></p>
+<div class="abstract">
+<p class="abstract">Abstract</p>
+We propose a confidentiality measure for plaintext queries against an adversary that observes corresponding hidden queries. An adversary employs a plaintext attack to infer a mapping from hidden to plaintext queries. We apply the estimator to an encrypted search system that maintains a minimum confidentiality level. A bootstrap method estimates the sampling distribution of confidentiality over query histories. This provides a probabilistic assessment of confidentiality, like the chance that an adversary infers over 70% of queries. We also propose mapping entropy to a lower bound on confidentiality.
+</div>
+</div>
+<div id="keywords" class="section level3 unnumbered hasAnchor" number="">
+<h3>Keywords<a href="#keywords" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Encrypted Search, known-plaintext attack, oblivious search, Bootstrap method, information retrieval, information security, resilience engineering</p>
+</div>
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Introduction<a href="#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>With the advent of <em>cloud computing</em>, it is tempting to store our confidential data on remote
+(untrusted) systems like a cloud storage provider. However, a system administrator may be able to compromise the confidentiality of our data which threatens to prevent further adoption of cloud computing and electronic information retrieval in general if the threat cannot be mitigated.</p>
+<p>The primary challenge is a trade-off problem between confidentiality and usability of the data stored on remote untrusted systems. Encrypted Search attempts to resolve this trade-off problem.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-1" class="definition"><strong>Definition 1.1  </strong></span>Encrypted Search (ES) allows authorized search agents to investigate presence of specific search terms in a confidential target data set, such as a database of encrypted documents, while the contents, especially the meaning of the target data set and search terms, are hidden from any unauthorized personnel, including the system administrators of a cloud server.</p>
+</div>
+<p>Essentially, ES enables <em>oblivous search</em>. For instance, a user may search a confidential database stored on an untrusted remote system without other parties being able to determine what the user searched for. We denote any untrusted party that has full access to the untrusted remote system (where the confidential data is stored) as an adversary.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Despite the potential of ES, <em>perfect</em> confidentiality is not theoretically possible. There are many ways confidentiality may be compromised. In this paper, we consider an adversary whose primary objective is to comprehend the confidential information needs of the search agents by analyzing their history of ES queries.</p>
+<p>A simple measure of confidentiality is given by the proportion of queries the adversary is able to comprehend. We consider an adversary that employs a known-plaintext attack. However, since the confidentiality is a function of the history of queries, different histories will result in different levels of confidentiality. We apply the Bootstrap method to estimate the sampling distribution of the confidentiality. The sampling distribution provides the probabilistic framework to resolve security-related questions such as ``what is the probability that the confidentiality is less than <span class="math inline">\(70\%\)</span>?’’</p>
+</div>
+<div id="relatedwork" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Related Work<a href="#relatedwork" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>A method was proposed to enable untrusted systems the ability to perform searches over encrypted e-mail messages, called public-key encryption with keyword search (PEKS) . PEKS was designed in such a way that e-mail messages are encrypted by the public key of an e-mail receiver, while a third party, such as an e-mail server, to perform search for a particular word (e.g., ``urgent’’) in each encrypted message without all the raw contents in the encrypted e-mail exposed to the third party. The core of this method is trapdoors, which are a hash value of a given word in e-mails. Each e-mail receiver creates trapdoors, one for each target word and trapdoors are included in each encrypted e-mail message for searches on the encrypted e-mail messages.</p>
+<p>This concept was extended to allow untrusted systems to perform encrypted searches that allow approximate matching by enumerating multiple trapdoors, one for each expected deviation proposed to apply ES to enhancing security in cloud computing.</p>
+<p>Despite the potentials in the ES schemes, risk of information leaks through guessing the searched words has been identified. It has been demonstrated that anyone who has access to encrypted data possibly map them to their plain text counterparts.</p>
+<p>Use of secure communication channels (e.g., SSL) will be effective in hiding the trapdoors in queries submitted by legitimate users from external adversaries, but use of secure communication channels still can not prevent frequency attacks from internal adversaries, such as malicious administrators, assuming that they can intercept trapdoors within a local host computer, by installing illegal capturing tool or by tampering executables.</p>
+<p>Despite the threat from frequency attacks, there has not been much work that delves into quantified analyses on the conditions for when such information leaks exceed a tolerable risk level under various conditions. Rivain proposed a multivariate Gaussian random variable method to estimate the success rate in discovering secret keys under side-channel attacks. Rivain proposed use of ``confidence’’ for evaluating the effectiveness in side-channel attacks. They proposed a solution against correlation attacks, but not against frequency attacks. Correlation attacks are different from frequency attacks in that the adversary discovers the encryption keys to deduce the plaintext in the former, while the latter induces the plaintext directly from the observed trapdoors without discovering their encryption keys.</p>
+</div>
+<div id="es_model" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Encrypted Search Model<a href="#es_model" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>An information retrieval process begins when a search agent submits a query to an information system, where a query represents an information need. In response, the information system returns a set of relevant objects, such as <em>documents</em>, that satisfy the information need. An ES system may support many different kinds of queries, but we assume the query model is a <em>sequence-of-words</em>.
+The adversary is an untrusted agent that is able to observe the sequence of queries and corresponding search results submitted by authorized search agent.
+The objective of the ES system is to prevent the adversary from being able to comprehend the information needs submitted by authorized search agents.
+Information needs are represented by queries, which we we assume is a <em>sequence-of-words</em> model.
+A query submitted to an ES system should not be comprehensible to the adversary.
+A <em>hidden query</em> represents a confidential information need of an authorized search agent that is suppose to be incomprehensible to the adversary.
+The primary means by which ES is enabled is by the use of cryptographic <em>trapdoors</em> as given by the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-2" class="definition"><strong>Definition 3.1  </strong></span>Search agents map plaintext search keys to some cryptographic hash, denoted trapdoors.</p>
+</div>
+<p>A trapdoor for a plaintext search key is necessary to allow an <em>untrusted</em> ES system to look for the key in a corresponding confidential data set.</p>
+<p>The ES system uses a substitution cipher in which each search key in a plaintext query is mapped to a unique trapdoor signature. The substitution cipher is denoted by
+<span class="math display">\[\begin{equation}
+    h : \mathbb{X} \mapsto \mathbb{Y},
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbb{X}\)</span> is the set of plaintext search keys and <span class="math inline">\(\mathbb{Y}\)</span> is the set of <em>trapdoors</em>.</p>
+<p>The most straightforward substitution cipher is a simple substitution cipher where each atomic plaintext search key maps to a single trapdoor as given by
+<span class="math display">\[\begin{equation}
+\label{alg:q_to_hq}
+    \operatorname{hidden-query-generator}(\boldsymbol{x}) = \left\{h(x) : x \in \boldsymbol{x}\right\},
+\end{equation}\]</span>
+where <span class="math inline">\(\boldsymbol{x}\)</span> is a plaintext query and <span class="math inline">\(h\)</span> is the substitution cipher (hash function).</p>
+<p>Given a plaintext key <span class="math inline">\(x \in \mathbb{X}\)</span>, <span class="math inline">\(h(x)\)</span> is a random variable whose support is a subset of the trapdoors in <span class="math inline">\(\mathbb{Y}\)</span>. Given any plaintext keys <span class="math inline">\(x,x&#39; \in \mathbb{X}\)</span>, <span class="math inline">\(x \neq x&#39;\)</span>, the supports of <span class="math inline">\(h(x)\)</span> and <span class="math inline">\(h(x&#39;)\)</span> are disjoint. This makes it possible to <em>undo</em> the substitution cipher by some function denoted by
+<span class="math display">\[
+    g^* : \mathbb{Y} \mapsto \mathbb{X}
+\]</span>
+such that
+<span class="math display">\[
+    x = g^*\left(h(x)\right)
+\]</span>
+for every <span class="math inline">\(x \in \mathbb{X}\)</span>. Thus, given a trapdoor <span class="math inline">\(y \in \mathbb{Y}\)</span>, the corresponding plaintext key is given uniquely by <span class="math inline">\(g^*(y) \in \mathbb{X}\)</span>. If <span class="math inline">\(h\)</span> is a <em>simple substitution cipher</em> where each plaintext key maps to a single trapdoor, then <span class="math inline">\(h\)</span> is a function and <span class="math inline">\(g^*\)</span> is its inverse denoted by <span class="math inline">\(h^{-1}\)</span>.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.2  </strong></span>A <em>hidden query</em> time series of size <span class="math inline">\(p\)</span> is a sequence of <span class="math inline">\(p\)</span> hidden queries given by
+<span class="math display">\[
+    (\boldsymbol{y_1}, \ldots, \boldsymbol{y_p}),
+\]</span>
+where <span class="math inline">\(\boldsymbol{y_j}\)</span> is given by
+<span class="math display">\[
+    \boldsymbol{y_j} = \operatorname{hidden\_query\_generator}(\boldsymbol{x_j})
+\]</span>
+for <span class="math inline">\(j=1,\ldots,p\)</span> and <span class="math inline">\(\boldsymbol{x_1},\ldots,\boldsymbol{x_p}\)</span> is a time series of <span class="math inline">\(n\)</span> plaintext queries submitted by authorized search agents.</p>
+</div>
+<p>We assume the adversary may only observe the <em>hidden query</em> time series to estimate the <em>plaintext query</em> time series.
+We denote the <span class="math inline">\(p\)</span> components of the <span class="math inline">\(j\)</span>-th trapdoor <span class="math inline">\(\boldsymbol{y_j}\)</span> by
+<span class="math display">\[
+    y_{j 1},\ldots,y_{j j_p},
+\]</span>
+and thus given a <em>hidden query</em> time series
+<span class="math display">\[\begin{equation}
+    \left(\boldsymbol{y_1}, \boldsymbol{y_2}, \ldots, \boldsymbol{y_p}\right),
+\end{equation}\]</span>
+we may represent it by the time series given by
+<span class="math display">\[\begin{align}
+\begin{split}
+    \left(y_{1\,1}, \ldots, y_{1\,j_1}, q, y_{2\,1}, \ldots, y_{2\,j_2}, q, \ldots, y_{p\,1},\ldots, y_{p\,j_p}, q\right),
+\end{split}
+\end{align}\]</span>
+where <span class="math inline">\(q\)</span> denotes the <em>end-of-vector</em> token.</p>
+<p>We denote a time series of such trapdoors by the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-4" class="definition"><strong>Definition 3.3  </strong></span>A time series of <span class="math inline">\(n\)</span> trapdoors is denoted by
+<span class="math display">\[\begin{equation}
+    \boldsymbol{\tau_n} = \left(y_1, \ldots, y_n\right),
+\end{equation}\]</span>
+where
+<span class="math display">\[\begin{equation}
+    y_j = h(x_j)
+\end{equation}\]</span>
+for <span class="math inline">\(j=1,\ldots,n\)</span> and <span class="math inline">\((x_1,\ldots,x_n)\)</span> is the corresponding plaintext time series.</p>
+</div>
+<div id="pr_model" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Probabilistic Model<a href="#pr_model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The two primary sources of information are given by the (unobserved) time series of plaintext which induces the (observable) time series of trapdoors. Other potential sources of information are ignored, such as the time a <em>hidden query</em> is submitted.</p>
+<p>Since the time series of plaintext is uncertain, we model it as a sequence of random variables.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-5" class="definition"><strong>Definition 3.4  </strong></span>The <span class="math inline">\(j\)</span>-th random plaintext search key, denoted by <span class="math inline">\(X_j\)</span>, in a time series of size <span class="math inline">\(n\)</span> has a conditional probability given by
+<span class="math display">\[\begin{equation}
+    \Pr\{X_j = x_j | X_1 = x_1,\ldots,X_{j-1} = x_{j-1}\}
+\end{equation}\]</span>
+for <span class="math inline">\(j=1,\ldots,n\)</span> and one of the <em>keys</em> is special and denotes <em>end-of-query</em>.</p>
+</div>
+<p>The time series of trapdoors is a function of the plaintext time series.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-6" class="definition"><strong>Definition 3.5  </strong></span>The uncertain <span class="math inline">\(j\)</span>-th trapdoor is a random variable given by
+<span class="math display">\[\begin{equation}
+    Y_j = h(X_j),
+\end{equation}\]</span>
+where the <em>end-of-query</em> key is not remapped by the substitution cipher <span class="math inline">\(h\)</span>.</p>
+</div>
+</div>
+</div>
+<div id="threatmodel" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Threat Model: Known-Plaintext Attack<a href="#threatmodel" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this threat model, the adversary is interested in estimating the plaintext time series. However, the adversary is only able to observe the <em>trapdoor</em> time series. Thus, the adversary’s objective is to infer the plaintext from the <em>trapdoors</em> using frequency analysis attacks, in particular a <em>known-plaintext attack</em>.</p>
+<p>In a known-plaintext attack, the adversary the objective of the adversary is to learn how to <em>undo</em> the substitution cipher <span class="math inline">\(h\)</span> as given by <span class="math inline">\(g^*\)</span>.
+We assume the mapping function <span class="math inline">\(g^*\)</span> is not known to the adversary, but is able to observe a time series of <span class="math inline">\(n\)</span> trapdoors, i.e., a particular <span class="math inline">\(\tau_n\)</span>.</p>
+<p>A maximum likelihood estimator of <span class="math inline">\(g^*\)</span> is given by
+<span class="math display">\[\begin{equation}
+\label{eq:mle}
+    \hat{g} = \arg\max_{g \in G} \Pr\{X_1 = g(y_1)\} \times \prod_{i=2}^{n} \Pr\{X_i = g(y_i) | X_{i-1} = g(y_{i-1}), \ldots, X_1 = g(y_1) \},
+\end{equation}\]</span>
+where <span class="math inline">\(G\)</span> is the set of all possible mapping functions from the set of trapdoors <span class="math inline">\(\mathbb{Y}\)</span> to the set of plaintext keys <span class="math inline">\(\mathbb{X}\)</span>.</p>
+<p>If two plaintext keys <span class="math inline">\(x,x&#39; \in \mathbb{X}, x \neq x&#39;\)</span>, may be exchanged without changing the probability distribution of the time series, they are <em>indistinguishable</em> and the mapping function <span class="math inline">\(g^*\)</span> necessarily has multiple maximum likelihood estimates (even after observing an infinite time series). However, if some of the random variables are not exchangeable, then the <em>adversary</em> may learn <em>something</em> about the plaintext by observing the time series of trapdoors.</p>
+<p>The greater the uniformity of the <em>true</em> distribution, the less accurate the maximum likelihood estimator of <span class="math inline">\(g^*\)</span> is. At the limit of maximum uniformity, where every pair is exchangeable, the adversary can learn nothing about the plaintext by observing the time series. Natural languages have a high degree of non-uniformity and so the primary concern of the adversary is the divergence between the <em>true</em> distribution and the <em>known-plaintext</em> distribution.</p>
+<p>We assume the optimal adversary knows the <em>true</em> plaintext distribution <span class="math inline">\(X_1,\ldots,X_n\)</span> (or a <em>known-plaintext</em> distribution that has a sufficiently small divergence from the <em>true</em> distribution).
+The <em>known-plaintext</em> distribution may be used to solve an approximation to  as given by the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-7" class="definition"><strong>Definition 4.1  </strong></span>In a <em>known-plaintext attack</em>, the adversary substitutes the unknown true distribution with the known-plaintext distribution and solves  under this substituted distribution.</p>
+</div>
+<div id="sub-optimal-adversaries" class="section level3 unnumbered hasAnchor" number="">
+<h3>Sub-Optimal Adversaries<a href="#sub-optimal-adversaries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+A <em>suboptimal</em> adversary may have any of the following problems:
+<p>According to Piantadosi, the marginal distribution of words in most documents (and queries) follow a Zipf distribution, where the most frequent word occurs approximately proportional to <span class="math inline">\(k\)</span> times as often as the <span class="math inline">\(k\)</span>-th most frequently occurring word.</p>
+<p>If an adversary ignores correlations in the time series by modeling each time step as an independent and identically distributed random variable, then  simplifies to the trivially solvable
+<span class="math display">\[\begin{align}
+\label{eq:approx_mle}
+    \operatorname{\hat{g}}
+        &amp;= \arg\max_{g \in G}
+        \left\{
+            \prod_{i=1}^{n} \Pr\!\left[
+                X = g(y_i)\right]
+        \right\}\\
+        &amp;= \arg\max_{g \in G}
+        \left\{
+            \sum_{i=1}^{n} \log \Pr\!\left[
+                X = g(y_i)\right]
+        \right\}
+\end{align}\]</span>
+where
+<span class="math display">\[
+    \Pr[X = x] = \frac{1}{n} \sum_{i=1}^{n} \Pr[X_i = x].
+\]</span>.
+If the true distribution is an independent and identically distributed time series, the adversary is optimal if a solution to  can be found.</p>
+</div>
+</div>
+<div id="bootstrap" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Confidentiality Statistic<a href="#bootstrap" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We are interested in measuring the degree of confidentiality as given by the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-8" class="definition"><strong>Definition 5.1  </strong></span>Given a time series of <span class="math inline">\(n\)</span> trapdoors
+<span class="math display">\[\begin{equation}
+    \boldsymbol{\tau_n} = (y_1,y_2\ldots,y_t, \ldots, y_n),
+\end{equation}\]</span>
+the confidentiality at time step <span class="math inline">\(t\)</span>, <span class="math inline">\(1 \leq t \leq n\)</span>, is given by
+<span class="math display">\[\begin{equation}
+\label{eq:conf_metric}
+    k_t = 1 - p_t
+\end{equation}\]</span>
+where <span class="math inline">\(p_t\)</span> is the fraction of trapdoors in the first <span class="math inline">\(t\)</span> time steps that the adversary successfully maps to plaintext. That is,
+<span class="math display">\[\begin{equation}
+\label{eq:accuracy}
+    p_t = \frac{\delta}{t},
+\end{equation}\]</span>
+where
+<span class="math display">\[\begin{equation}
+    \delta = \sum_{i=1}^{t} \left[g^*(y_i) = \hat{g}(y_i)\right].
+\end{equation}\]</span></p>
+</div>
+The following example illustrates the <em>confidentiality statistic</em>.
+<p>The confidentiality statistic is expected to converge to some asymptotic limit, i.e., as <span class="math inline">\(t \to \infty\)</span>, the confidentiality <span class="math inline">\(k_t \to c\)</span>, <span class="math inline">\(0 \leq c \leq 1\)</span>. If the adversary employs a <em>known-plaintext attack</em> where the distribution of the <em>known-plaintext</em> is equivalent to the <em>true</em> distribution, then <span class="math inline">\(c = 0\)</span>, i.e., the adversary eventually comprehends the entire time series.</p>
+<div id="sampling-distribution-of-confidentiality-statistic" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Sampling Distribution of Confidentiality Statistic<a href="#sampling-distribution-of-confidentiality-statistic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <em>confidentiality statistic</em> is a function of a <em>random time series</em> <span class="math inline">\((Y_1,\ldots,Y_n)\)</span> and therefore has a sampling distribution, denoted by <span class="math inline">\(K_t\)</span> for <span class="math inline">\(t = 1,\ldots,n\)</span>.
+The sampling distribution quantifies everything there is to know about the statistic. For instance, the sampling distribution* may be used to make claims like “there is a <span class="math inline">\(1\%\)</span> chance the adversary comprehends <span class="math inline">\(70\%\)</span> of the time series at time step <span class="math inline">\(t\)</span>.” Generally, the sampling distribution is not known and thus must be estimated. If we estimate the generative model of the time series of trapdoors, we may use the Bootstrap method to estimate the sampling distributions.</p>
+<blockquote>
+<p>TALK ABOUT THE WAYS TO GENERATE A TIME SERIES OF TRAPDOORS HERE. ONE WAY IS TO SIMPLY DO A MARGINAL. BUT, A BIGRAM ALSO WORKS. TIMING WISE, A BIGRAM THAT IS TIME DEPENDENT… E.G., THE LAST q TRAPDOORS. MANY OTHER MODELS. LOOK IT UP! YOU ACTUALLY ALSO HAVE CODE FOR THIS ALREADY. STUFF DESIGNED TO MAKE IT WORK FOR SMALLER SAMPLES, E.G., INTERPOLATION.</p>
+</blockquote>
+<p>In the Bootstrap method, we resample from the time series and compute the confidentiality <span class="math inline">\(k_t\)</span> of the resample. If we do this <span class="math inline">\(m\)</span> times, we generate a sample of <span class="math inline">\(m\)</span> confidentiality statistics
+<span class="math display">\[
+k_t^{(1)},\ldots,k_t^{(m)}
+\]</span>
+for <span class="math inline">\(t=1,\ldots,n\)</span>. Given this sample, we may compute any statistic that is a function of the sample. For instance, the expected value of the confidentiality statistic at time step <span class="math inline">\(t\)</span>, <span class="math inline">\(E[K_t]\)</span>, may be estimated by the sample mean
+<span class="math display">\[
+\bar{k}_t = \frac{1}{t} \sum_{i=1}^{m} k_t^{(i)}.
+\]</span>
+Another estimator of the expected confidentiality is given by a <em>moving average</em> like <em>Exponential smoothing</em>. However, the Bootstrap sampling distribution makes it possible to compute many other statistics of interest.</p>
+<p>The variance of the confidentiality statistic at time step <span class="math inline">\(t\)</span>, <span class="math inline">\(\operatorname{Var}[K_t]\)</span>, is another parameter of potential interest and may be estimated by the sample variance
+<span class="math display">\[
+s_{m-1}^2 = \frac{1}{m-1} \sum_{i=1}^{m} (k_t^{(i)} - \bar{k}_t)^2.
+\]</span>
+If the variance is high at a time step <span class="math inline">\(t\)</span>, the expected confidentiality at time step <span class="math inline">\(t\)</span> is not very indicative of the confidentiality of any particular time series at time step <span class="math inline">\(t\)</span>.
+By the large sample approximation, the sampling distribution of <span class="math inline">\(k_t\)</span> for <span class="math inline">\(t=1,\ldots,n\)</span> is approximately normal as given by the following theorem.</p>
+<div class="theorem">
+<p><span id="thm:normal" class="theorem"><strong>Theorem 5.1  </strong></span>The sampling distribution of <span class="math inline">\(k_t\)</span> converges in distribution to the normal distribution with a mean <span class="math inline">\(\bar{k}_t\)</span> and a variance <span class="math inline">\(s_{m-1}^2\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>The confidentiality statistic given by  is a linear function of an average. Therefore, by the Central Limit Theorem, the sampling distribution of <span class="math inline">\(k_t\)</span> converges in distribution to a normal distribution with a mean given by the sample mean and a variance given by the sample variance.</p>
+</div>
+</div>
+</div>
+<div id="sophisticated" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Mapping <em>Entropy</em> to <em>Confidentiality</em><a href="#sophisticated" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The adversary described in Section <a href="#threatmodel">4</a> may efficiently compromise the confidentiality of a time series of trapdoors if a <em>simple substitution cipher</em> is employed as described in Section @ref(es_model). However, the described adversary is not particularly sophisticated. For instance, a more sophisticated adversary incorporates the search patterns of specific search agents into the probability model described in Section @ref(pr_model).</p>
+<p>The adversaries we worry about the most are probably more clever than us. Thus, it may be asking too much to simulate them so that a <em>reliable</em> confidentiality statistic can be produced. Matters are further complicated if a simple substitution cipher is not used, e.g., a homophonic encryption scheme is used to flatten the distribution of trapdoors. In this case, the confidentiality is expected to improve, but it may be difficult to quantify to what extent.</p>
+<p>We may be able to construct a <em>lower-bound</em> on confidentiality that is a function of the <em>entropy</em>. The entropy of a random time series of <span class="math inline">\(t\)</span> trapdoors is given by
+<span class="math inline">\(H(Y_1,\ldots,Y_t)\)</span> bits. If the random time series is independently distributed, the entropy
+simplifies to <span class="math inline">\(H(Y_1) + \cdots + H(Y_t)\)</span> and if it is also identically distributed is simplifies to
+<span class="math inline">\(t H(Y_1)\)</span>. Consider the following two cases:</p>
+<ul>
+<li>An <em>optimal</em> adversary is expected to learn <em>nothing</em> about the mapping from <em>trapdoors</em> to <em>plaintext keys</em> by observing a uniformly distributed time series. A uniformly distributed time series of over a support set of <span class="math inline">\(m\)</span> unique trapdoor signatures has <span class="math inline">\(\log_2 m\)</span> bits per trapdoor of entropy.</li>
+<li>An <em>optimal</em> adversary is expected to learn <em>everything</em> about the mapping from <em>trapdoors</em> to <em>plaintext keys</em> by observing a degenerate time series, which has zero entropy.</li>
+</ul>
+<p>Thus, the entropy is bounded by <span class="math inline">\(0 \leq H\!\left(Y_1,\ldots,Y_t\right) \leq t \log_2 m\)</span></p>
+<p>We use these insights to construct an <em>information again</em> measure given by the following definition.
+::: {.definition}
+The <em>mean information gain</em> of a random time series <span class="math inline">\(Y_1,\ldots,Y_t\)</span> is defined to be the difference between the <em>maximum entropy</em> and the actual entropy as given by
+<span class="math inline">\(\mu(t) = t \log_2 m - H(Y_1,\ldots,Y_t)\)</span>, which is a real number between <span class="math inline">\(0\)</span> and <span class="math inline">\(t \log_2 m\)</span>.
+:::</p>
+<p>If the random time series is independently and identically distributed, then the <em>mean information gain</em> is given by
+<span class="math display">\[
+\mu(t) = t \bigl(\log_2 m - H(Y_1)\bigr)
+\]</span>
+bits.</p>
+<p>The rate of change of the <em>mean information gain</em> is given by the following theorem.
+::: {.theorem}
+The rate of change of the <em>mean information gain</em> at time <span class="math inline">\(t\)</span> is given by
+<span class="math display">\[\begin{align}
+    \lambda(t) = \log_2 m - H(Y_t | Y_{t-1},\ldots,Y_1)
+\end{align}\]</span>
+bits per trapdoor, which is a real number between <span class="math inline">\(0\)</span> and <span class="math inline">\(\log_2 m\)</span>.
+:::</p>
+<div class="proof">
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>The rate of change at time <span class="math inline">\(t\)</span> is the difference between the <em>mean information gain</em> at time steps <span class="math inline">\(t\)</span> and <span class="math inline">\(t-1\)</span>, which is given by
+<span class="math display">\[
+\lambda(t) = \mu(t) - \mu(t-1) = \log_2 m - H(Y_t, \ldots,Y_1) + H(Y_{t-1},\ldots,Y_1).
+\]</span>
+The joint entropy <span class="math inline">\(H(Y_1,\ldots,Y_t)\)</span> may be rewritten as
+<span class="math display">\[
+    H(Y_t | Y_{t-1}, \cdots, Y_1) + H(Y_{t-1}, \cdots, Y_1).
+\]</span>
+Performing this substitution results in the equivalent equality given by
+<span class="math display">\[\begin{align}
+\begin{split}
+    \lambda(t)
+        &amp;= \log_2 m - H\left(Y_t | Y_{t-1}, \ldots,Y_1\right)\\
+        &amp;\qquad+ H\left(Y_{t-1}, \ldots,Y_1\right) -H\left(Y_{t-1},\ldots,Y_1\right)
+\end{split}\\
+        &amp;= \log_2 m - H\left(Y_t | Y_{t-1}, \ldots,Y_1\right).
+\end{align}\]</span></p>
+</div>
+<p>If the random time series is independently and identically distributed, then the rate of change is a constant given by
+<span class="math display">\[
+\lambda = \log_2 m - H(Y_1)
+\]</span>
+bits per trapdoor. We may rewrite <span class="math inline">\(\mu(t)\)</span> in terms of the <em>rate</em> of the mean information gain as given by
+<span class="math display">\[
+\mu(t) = \sum_{j=1}^{t} \lambda(j).
+\]</span>
+For the <em>uniformly distributed</em> time series and the degenerate time series, <span class="math inline">\(\lambda(t) = 0\)</span> and <span class="math inline">\(\lambda(t) = \log_2 m\)</span> respectively for all time steps <span class="math inline">\(t\)</span>.</p>
+<p>We make the following conjecture about the <em>mean information gain</em>.</p>
+<div class="conjecture">
+<p><span id="cnj:unlabeled-div-11" class="conjecture"><strong>Conjecture 6.1  </strong></span>The <em>mean information gain</em> <span class="math inline">\(\mu(t)\)</span> quantifies the amount of information the <em>optimal</em> adversary is able to extract from observing <span class="math inline">\(Y_1, \ldots, Y_t\)</span> for the purpose of mapping <em>trapdoors</em> to <em>plaintext keys</em>.
+An upper-bound on the expected accuracy of the <em>optimal adversary</em> at time <span class="math inline">\(t\)</span> is an <em>unknown</em> function
+<span class="math display">\[
+r : \{1,2,\ldots\} \mapsto (0,1]
+\]</span>
+that is a function of <span class="math inline">\(\mu(t)\)</span> and has the following constraints:</p>
+<ul>
+<li><span class="math inline">\(0 &lt; r(t) \leq 1\)</span> for <span class="math inline">\(t \geq 1\)</span>. The accuracy is between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. However, <span class="math inline">\(r(t)\)</span> is an expectation, and the optimal adversary has a chance at correctly mapping trapdoors to plaintext even if the random time series has the maximum entropy, thus it is always greater than <span class="math inline">\(0\)</span>.</li>
+<li><span class="math inline">\(r(t+1) \geq r(t)\)</span>. It is a monotonically increasing function since seeing more of the time series is not expected to decrease the optimal adversary’s accuracy.</li>
+<li>If <span class="math inline">\(\lambda(t) = 0\)</span>, then <span class="math inline">\(r(t+1) - r(t) = 0\)</span>. If no information is gained from observing a time step <span class="math inline">\(t\)</span>, then the optimal adversary is not expected to improve accuracy at time <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(\lim_{t \to \infty} r(t) = c, 0 &lt; c \leq 1\)</span>. This is entailed by the other constraints. If the adversary knows the <em>true</em> distribution, where the distribution is not uniformly distributed, and the maximum likelihood equation has a unique solution, then <span class="math inline">\(c = 1\)</span>.</li>
+</ul>
+</div>
+<p>Plausible candidates of <span class="math inline">\(r\)</span> take on <em>sigmoid</em>-like curves. Initially, <span class="math inline">\(r\)</span> is near its lower-limit (typically near <span class="math inline">\(0\)</span>) and as <span class="math inline">\(t\)</span> increases, <span class="math inline">\(r\)</span> begins to slowly increase. Given an appropriate mapping from trapdoors to plaintext, the empirical distribution of the mapped trapdoors starts to resemble the unknown true distribution. At some point, the empirical distribution has nearly zero divergence from the true distribution, and thus</p>
+<div id="estimating-entropy" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Estimating Entropy<a href="#estimating-entropy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Since the probabilistic model for the random time series may not be known, we may estimate the entropy.
+The <em>entropy</em> of a random time series is equivalent to the expected bit length output by an optimal <em>lossless</em> compressor given the time series as input.
+<span class="math display">\[
+H(Y_1,\ldots,Y_t) = E\biggl\{\ell\bigl(\operatorname{compress}^*(Y_1 Y_2 \cdots Y_t)\bigr)\biggr\},
+\]</span>
+where <span class="math inline">\(\operatorname{compress}^*\)</span> is a lossless optimal compressor of the sequence and <span class="math inline">\(\ell(x)\)</span> is the bit length of <span class="math inline">\(x\)</span>.
+Thus, given a time series of <span class="math inline">\(t\)</span> trapdoors, <span class="math inline">\(\tau_t = (y_1,\ldots,y_t)\)</span>, an estimator of the entropy is given by
+<span class="math display">\[
+\hat{H} = \ell\left(\operatorname{compress}(y_1 y_2 \cdots y_t)\right),
+\]</span>
+where <span class="math inline">\(\operatorname{compress}\)</span> is a near-optimal compressor of the time series.</p>
+<p>The <em>entropy</em> is an expectation, and is therefore a constant. However, an optimal compressor as a function of <span class="math inline">\(Y_1,\ldots,Y_2\)</span> outputs a bit string with a random bit length whose expectation is given by the entropy. Thus, it has a sampling distribution.</p>
+<p>For the purpose of matching the <em>trapdoors</em> to plaintext, assuming we have the <em>true</em> distribution, the most accurate mapping occurs when the empirical distribution of <span class="math inline">\(\tau_t\)</span> has zero divergence from the <em>true</em> distribution. The empirical distribution converges in distribution to the <em>true</em> distribution, so as <span class="math inline">\(t \to \infty\)</span>, <span class="math inline">\(p_t \to 1\)</span>.</p>
+<p>The adversary is <em>optimal</em> if the time series <span class="math inline">\(\tau_t\)</span> is drawn from a <em>unigram</em> language model using a <em>simple</em> substitution cipher.</p>
+<p>One possibility is to do a curve fit of <span class="math inline">\(r\)</span> to the mean confidentiality with respect to time step <span class="math inline">\(t\)</span>. Alternatively, … the expected gain from this distribution to the computed confidentiality, and then assume that this mapping generally holds. NOTE CORRECT. REMEMBER, r(t) maps t to accuracy THROUGH u(t). We can calculate u(t), see what the conf. is at u(t), and then map that confidentiality to r(t).</p>
+</div>
+</div>
+<div id="app" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> Application: Resilience Engineering<a href="#app" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>From a resilience engineering perspective, we are interested in the probability that the adversary has compromised the sample of <span class="math inline">\(t\)</span> trapdoors as given by
+<span class="math display">\[\begin{equation}
+\label{eq:prob_conf}
+    \Pr[K_t \geq \alpha],
+\end{equation}\]</span>
+where <span class="math inline">\(\alpha\)</span> is the minimum acceptable level of confidentiality. If the probability that this minimum level is relatively low (e.g., less than <span class="math inline">\(95\%\)</span>), the trapdoor signatures could be reassigned to reestablish confidentiality.</p>
+<p>As <span class="math inline">\(t \to \infty\)</span>,  goes to <span class="math inline">\(0\)</span>. The minimum sample size the adversary may observe without exceeding some specified level of risk is given by the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-12" class="definition"><strong>Definition 7.1  </strong></span></p>
+The maximum number of trapdoors the adversary may observe with an acceptable level of risk of successfully compromising the confidentiality of the system is given by
+<span class="math display">\[\begin{equation}
+\label{eq:resample_point}
+    t^* = \arg\min_{t} \Pr\{K_t &gt; \alpha\} &gt; \beta,
+\end{equation}\]</span>
+where
+</div>
+<p>Given a set of Bootstrap resample of <span class="math inline">\(m\)</span> confidentiality statistics
+<span class="math display">\[
+\mathbb{K} = \left\{k_t^{(1)},\ldots,k_t^{(m)}\right\},
+\]</span>
+we may estimate  in two ways. The most straightforward way is the proportion of the sample that is greater than <span class="math inline">\(\alpha\)</span> as given by the statistic
+<span class="math display">\[
+\Pr[K_t \geq \alpha] \approx \frac{|\mathbb{A}|}{m},
+\]</span>
+where
+<span class="math display">\[
+\mathbb{A} = \left\{k \in \mathbb{K} : k &gt; \alpha\right\}.
+\]</span>
+However, by Theorem <a href="#thm:normal">5.1</a>, <span class="math inline">\(K_t\)</span> converges in distribution to a normal distribution. Thus, by the large sample approximation,
+<span class="math display">\[\begin{equation}
+\label{eq:approx_prob_conf}
+    \Pr[K_t \geq \alpha] \approx 1 - \phi\!\left(\frac{\alpha - \bar{k}_t}{s_{t-1}}\right),
+\end{equation}\]</span>
+where <span class="math inline">\(\phi\)</span> is the cumulative distribution function of the standard normal, <span class="math inline">\(\bar{k}_t\)</span> is the sample mean, and <span class="math inline">\(s_{t-1}\)</span> is the sample standard deviation. Substituting  into  and simplifying results in a statistic of <span class="math inline">\(t^*\)</span> given by
+<span class="math display">\[
+\widehat{t^*} = \arg\min_{t} \phi\!\left(\frac{\alpha - \bar{k}_t}{s_{t-1}}\right) &lt; 1 - \beta.
+\]</span></p>
+</div>
+<div id="casestudy" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">8</span> Case Study: Zipf Distribution<a href="#casestudy" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Consider a random time series <span class="math inline">\(X_1,\ldots,X_n\)</span>. If <span class="math inline">\(X_i\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span> follow a Zipf distribution, then its rank is a random variable given by
+<span class="math display">\[\begin{equation}
+\label{eq:rvK}
+    K_i = - \operatorname{Rank}(X_i)
+\end{equation}\]</span>
+such that
+<span class="math display">\[\begin{equation}
+    K_i \sim \operatorname{Zipf}(s,N),
+\end{equation}\]</span>
+where <span class="math inline">\(N\)</span> is the number of unique plaintext words and <span class="math inline">\(s\)</span> characterizes the degree of <em>uniformity</em> of the Zipf distribution.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-13" class="definition"><strong>Definition 8.1  </strong></span>The probability mass function of <span class="math inline">\(K\)</span> is given by
+<span class="math display">\[\begin{equation}
+    \Pr\{K_i = k | s, N) = k^{-s} H_{N,s}^{-1}.
+\end{equation}\]</span>
+where <span class="math inline">\(H_{N,s}\)</span> is the <em>generalized harmonic number</em> given by
+<span class="math display">\[\begin{equation}
+    H_{n,s} = \sum_{k=1}^{n} k^{-s}.
+\end{equation}\]</span></p>
+</div>
+<p>By , the probability mass function of <span class="math inline">\(X_i\)</span> is given by
+<span class="math display">\[
+    \Pr\{X_1 = x\} = \Pr\bigl\{K_i = \operatorname{Rank}(x) | s, N\bigr\}.
+\]</span>
+for <span class="math inline">\(i=1,\ldots,n\)</span>. Similiarly, since a <em>simple substitution cipher</em> is being used, the probability mass of <span class="math inline">\(Y_j\)</span> is given by
+<span class="math display">\[
+    \Pr\{Y_1 = y\} = \Pr\bigl\{X_1 = \operatorname{h^{-1}}(y)\bigr\}
+\]</span>
+for <span class="math inline">\(j=1,\ldots,n\)</span>.</p>
+<p>The entropy of the Zipf distribution is given by the following theorem.</p>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-14" class="theorem"><strong>Theorem 8.1  </strong></span>The entropy of the Zipf distribution with parameters <span class="math inline">\(s\)</span> and <span class="math inline">\(N\)</span> is given by
+<span class="math display">\[
+    H_1(N,s) = H_{N,s}^{-1} \sum_{k=1}^{N} k^{-s}
+            \left(s \log_2 k + \log_2 H_{N,s}\right).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span><span class="math display">\[\begin{align}
+    H_1(N,s) &amp;= -\sum_{k=1}^{N} \Pr\{K_i = k | s, N\} \log_2 \Pr\{K_i = k | s, N\}\\
+      &amp;= -\sum_{k=1}^{N} k^{-s} H_{N,s}^{-1}
+            \log_2 \left(k^{-s} H_{N,s}^{-1}\right)\\
+      &amp;= H_{N,s}^{-1} \sum_{k=1}^{N} k^{-s}
+            \left(s \log_2 k + \log_2 H_{N,s}\right).
+\end{align}\]</span></p>
+</div>
+<p>Two limiting cases are given by the following corollaries.</p>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-16" class="corollary"><strong>Corollary 8.1  </strong></span>The maximum entropy results when the Zipf distribution has a parameter value <span class="math inline">\(s=0\)</span> and is given by <span class="math inline">\(H_1(s = 0,N) = \log_2 N\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span><span class="math display">\[\begin{align}
+    H_1(0,N)
+        &amp;= H_{N,0}^{-1} \sum_{k=1}^{N} k^{0}
+        \left(0 \log_2 k + \log_2 H_{N,0}\right)\\
+        &amp;= N^{-1} \sum_{k=1}^{N} \log_2 N\\
+        &amp;= \log_2 N.
+\end{align}\]</span></p>
+</div>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-18" class="corollary"><strong>Corollary 8.2  </strong></span>The minimum entropy results when the Zipf distribution has a parameter value <span class="math inline">\(s \to \infty\)</span> and is given by
+<span class="math display">\[
+    \lim_{s \to \infty} H_1(s,N) = 0.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>First, we take the limit
+<span class="math display">\[
+\lim_{s \to \infty} H_1(s,N) = H_{N,\infty} \sum_{k=1}^{N} k^{-\infty} = 0
+\]</span>
+by the convention <span class="math inline">\(\lim_{a \to 0} a \log_2 a = 0\)</span> and thus <span class="math inline">\(\lim_{s \to \infty} H_1(s,N) = 0\)</span>.</p>
+</div>
+<p>We map the <em>accuracy</em> of the adversary with respect to sample size for various entropy levels. The greater the entropy, the less accurate the mapping is expected to be. At one extreme, we have an entropy of <span class="math inline">\(0\)</span> (minimum entropy) in which <span class="math inline">\(100\%\)</span> of the traffic is successfully mapped after viewing a sample of size <span class="math inline">\(1\)</span> and at the other extreme we have an entropy of <span class="math inline">\(6.64\)</span> (maximum entropy) where the accuracy is given by pure random chance and is not correlated with sample size.</p>
+<p><img src="images/zipf-entropy-fig.svg" /><!-- --></p>
+</div>
+<div id="conclusion" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">9</span> Conclusions and Future Work<a href="#conclusion" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The primary contributions in this paper are two-folds. First, there has
+not been much work for studying how safe encrypted searches are against
+frequency attacks, which can be measured by a large number of attackers
+for long period of time, possibly infinitely long. We provide studies on
+the resilience of encrypted searches against frequency attacks from the
+view point of resilience engineering approach to enhance security on
+encrypted searches. Resilience engineering is a new way of enhancing
+safety by precisely estimating the level of possible threats to a system
+and feeding them back to adjusting or re-designing the system to
+maintain the acceptable level of safety.</p>
+<p>Our second contribution is development of a new method, Moving Average
+Bootstrap (MAB) method, which efficiently and accurately calculates the
+estimator for the minimum number of encrypted words (<span class="math inline">\(N^*\)</span>) an
+adversary needs to achieve a given accuracy level (<span class="math inline">\(p^*\)</span>) with a
+certain level of confidence as soon as a relatively small number of
+samples (<span class="math inline">\(n\)</span>) (i.e., encrypted words) are submitted by legitimate
+users. Thus, the MAB method will let the defenders calculate the
+estimator at an early stage without waiting for a large number of
+queries submitted by legitimate users. Especially from the view point of
+``tractability’’, calculating the estimator using, not to mention an
+infinitely large number of encrypted words, a large number of encrypted
+words takes time (waiting for a large number of encrypted words to be
+submitted) and huge storage (storage space to hold the submitted
+encrypted words) is required.</p>
+<p>Our proposed MAB method calculated the estimated number of encrypted
+search queries an adversary needs to observe (<span class="math inline">\(N^*\)</span>) for achieving a
+given accuracy level, <span class="math inline">\(p^* = 0.30\)</span>, at the confidence level of <span class="math inline">\(95\%\)</span>
+using only <span class="math inline">\(5\%\)</span> of the actual observations (250/5000) (Figure 5 (c)).
+Assuming that the increase in the time an adversary needs to achieve a
+certain <span class="math inline">\(p^*\)</span> is proportional to the ratio in the increase of the
+number of the encrypted words observed by an adversary (<span class="math inline">\(n\)</span>) for a
+large number of encrypted words, the MAB method would allow a defender
+to estimate <span class="math inline">\(N^*\)</span> in <span class="math inline">\(5\%\)</span> of time (without waiting for legitimate
+users to issue a large number of encrypted words). We are currently
+performing analyses using higher <span class="math inline">\(p^*\)</span> (<span class="math inline">\(0.55\)</span> through <span class="math inline">\(0.80\)</span>) for
+different levels of confidence (<span class="math inline">\(90\)</span> to <span class="math inline">\(98\%\)</span>) for observing how they
+affect the performance of MAB method and for observing if there is any
+pathological case for MAB method.</p>
+
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>A system administrator being a typical example.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
